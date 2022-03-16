@@ -23,11 +23,16 @@ int main() {
       return s.empty() ? 0 : s[0] - 'A';
     }
   };
+  std::string alphabet = "abcdefghijklmnopqrstuvwxyz";
 
   HashTable<std::string, int, BadHasher> bad_table;
-  for (int i = 0; i < 10; i++) {
-    bad_table.insert(std::to_string(i), 20);
+  for (auto &c : alphabet) {
+    bad_table.insert(std::to_string(c), 20);
   }
-  bad_table.insert("51", 50);
-  bad_table["513"] = 5;
+  for (auto &c : alphabet) {
+    bad_table.erase(std::to_string(c));
+  }
+  bad_table.insert("b", 5);
+  bad_table["AAA"] = 7;
+  std::cout << "t" << std::endl;
 }

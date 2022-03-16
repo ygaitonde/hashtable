@@ -87,7 +87,8 @@ public:
           return bucket.val;
         }
       }
-      break;
+      insert(key, V());
+      return buckets[idx].val;
     case Status::Occupied:
       if (buckets[idx].key == key) {
         return buckets[idx].val;
@@ -111,7 +112,8 @@ public:
           return bucket.val;
         }
       }
-      break;
+      insert(key, V());
+      return buckets[idx].val;
     }
   }
 
@@ -127,7 +129,7 @@ public:
       num_elements++;
       if (!buckets.empty() && (static_cast<double>(num_elements) /
                                static_cast<double>(buckets.size())) > 0.5) {
-        rehash_and_grow();
+        // rehash_and_grow();
       }
       return true;
     case Status::Deleted:
@@ -147,7 +149,7 @@ public:
       num_elements++;
       if (!buckets.empty() &&
           (static_cast<double>(num_elements) / buckets.size()) > 0.5) {
-        rehash_and_grow();
+        // rehash_and_grow();
       }
       return true;
     case Status::Occupied:
@@ -171,7 +173,7 @@ public:
           num_elements++;
           if (!buckets.empty() &&
               (static_cast<double>(num_elements) / buckets.size()) > 0.5) {
-            rehash_and_grow();
+            // rehash_and_grow();
           }
           return true;
         }
@@ -205,7 +207,7 @@ public:
           return 1;
         }
       }
-      break;
+      return 0;
     case Status::Occupied:
       if (buckets[idx].key == key) {
         buckets[idx].status = Status::Deleted;
@@ -224,6 +226,7 @@ public:
           return 1;
         }
       }
+      return 0;
     }
   }
 
