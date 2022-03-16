@@ -107,7 +107,7 @@ public:
         if (bucket.status == Status::Deleted && first_deleted == -1) {
           first_deleted = probe_idx;
         }
-        if (bucket.key == key && bucket.status == Status::Occupied) {
+        if (bucket.status == Status::Occupied && bucket.key == key) {
           return bucket.val;
         }
       }
@@ -137,7 +137,7 @@ public:
         if (bucket.status == Status::Empty) {
           break;
         }
-        if (bucket.key == key && bucket.status == Status::Occupied) {
+        if (bucket.status == Status::Occupied && bucket.key == key) {
           return false;
         }
       }
@@ -199,7 +199,7 @@ public:
         if (bucket.status == Status::Empty) {
           return 0;
         }
-        if (bucket.key == key && bucket.status == Status::Occupied) {
+        if (bucket.status == Status::Occupied && bucket.key == key) {
           bucket.status = Status::Deleted;
           num_elements--;
           return 1;
@@ -218,7 +218,7 @@ public:
         if (bucket.status == Status::Empty) {
           return 0;
         }
-        if (bucket.key == key && bucket.status == Status::Occupied) {
+        if (bucket.status == Status::Occupied && bucket.key == key) {
           bucket.status = Status::Deleted;
           num_elements--;
           return 1;
