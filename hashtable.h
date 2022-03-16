@@ -238,7 +238,9 @@ private:
     buckets_copy.resize(buckets.size() * 2);
     std::swap(buckets, buckets_copy);
     for (auto &i : buckets_copy) {
-      insert(i.key, i.val);
+      if (i.status == Status::Occupied) {
+        insert(i.key, i.val);
+      }
     }
   }
 
