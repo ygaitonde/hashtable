@@ -69,6 +69,7 @@ public:
   // a reference to the resulting bucket.
   V &operator[](const K &key) {
     size_t idx = get_hash(key);
+    size_t new_idx = idx;
     switch (buckets[idx].status) {
     case Status::Empty:
       insert(key, V());
@@ -81,14 +82,16 @@ public:
         if (bucket.status == Status::Empty) {
           // insert into the original spot
           insert(key, V());
-          return buckets[idx].val;
+          new_idx = get_hash_after_insert(key);
+          return buckets[new_idx].val;
         }
         if (bucket.status == Status::Occupied && bucket.key == key) {
           return bucket.val;
         }
       }
       insert(key, V());
-      return buckets[idx].val;
+      new_idx = get_hash_after_insert(key);
+      return buckets[new_idx].val;
     case Status::Occupied:
       if (buckets[idx].key == key) {
         return buckets[idx].val;
@@ -99,11 +102,8 @@ public:
         auto &bucket = buckets[probe_idx];
         if (bucket.status == Status::Empty) {
           insert(key, V());
-          if (first_deleted == -1) {
-            return buckets[probe_idx].val;
-          } else {
-            return buckets[first_deleted].val;
-          }
+          new_idx = get_hash_after_insert(key);
+          return buckets[new_idx].val;
         }
         if (bucket.status == Status::Deleted && first_deleted == -1) {
           first_deleted = probe_idx;
@@ -113,7 +113,8 @@ public:
         }
       }
       insert(key, V());
-      return buckets[idx].val;
+      new_idx = get_hash_after_insert(key);
+      return buckets[new_idx].val;
     }
   }
 
@@ -129,7 +130,7 @@ public:
       num_elements++;
       if (!buckets.empty() && (static_cast<double>(num_elements) /
                                static_cast<double>(buckets.size())) > 0.5) {
-        // rehash_and_grow();
+        rehash_and_grow();
       }
       return true;
     case Status::Deleted:
@@ -149,7 +150,7 @@ public:
       num_elements++;
       if (!buckets.empty() &&
           (static_cast<double>(num_elements) / buckets.size()) > 0.5) {
-        // rehash_and_grow();
+        rehash_and_grow();
       }
       return true;
     case Status::Occupied:
@@ -173,7 +174,7 @@ public:
           num_elements++;
           if (!buckets.empty() &&
               (static_cast<double>(num_elements) / buckets.size()) > 0.5) {
-            // rehash_and_grow();
+            rehash_and_grow();
           }
           return true;
         }
@@ -250,6 +251,15 @@ private:
   size_t get_hash(const K &key) {
     Hasher hash;
     return hash(key) % buckets.size();
+  }
+
+  size_t get_hash_after_insert(const K &key) {
+    Hasher hash;
+    size_t idx = hash(key) % buckets.size();
+    while (buckets[idx].status == Status::Occupied && buckets[idx].key != key) {
+      idx = (++idx % buckets.size());
+    }
+    return idx;
   }
 };
 
