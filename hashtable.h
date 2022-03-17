@@ -73,7 +73,8 @@ public:
     switch (buckets[idx].status) {
     case Status::Empty:
       insert(key, V());
-      return buckets[idx].val;
+      new_idx = get_hash_after_insert(key);
+      return buckets[new_idx].val;
       break;
     case Status::Deleted:
       for (size_t i = 1; i < buckets.size(); i++) {
