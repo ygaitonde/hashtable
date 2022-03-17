@@ -32,7 +32,7 @@ int main() {
   for (auto &c : alphabet) {
     bad_table.erase(std::to_string(c));
   }
-  bad_table.insert("b", 5);
-  bad_table["AAA"] = 7;
+  bad_table.insert("AAA", 5);
+  bad_table["AAAB"] = 7;
   std::cout << "t" << std::endl;
 }

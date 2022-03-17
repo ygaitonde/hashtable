@@ -130,7 +130,7 @@ public:
       num_elements++;
       if (!buckets.empty() && (static_cast<double>(num_elements) /
                                static_cast<double>(buckets.size())) > 0.5) {
-        rehash_and_grow();
+        // rehash_and_grow();
       }
       return true;
     case Status::Deleted:
@@ -150,7 +150,7 @@ public:
       num_elements++;
       if (!buckets.empty() &&
           (static_cast<double>(num_elements) / buckets.size()) > 0.5) {
-        rehash_and_grow();
+        // rehash_and_grow();
       }
       return true;
     case Status::Occupied:
@@ -174,7 +174,7 @@ public:
           num_elements++;
           if (!buckets.empty() &&
               (static_cast<double>(num_elements) / buckets.size()) > 0.5) {
-            rehash_and_grow();
+            // rehash_and_grow();
           }
           return true;
         }
@@ -184,6 +184,12 @@ public:
         if (bucket.status == Status::Occupied && bucket.key == key) {
           return false;
         }
+      }
+      if (first_deleted != -1) {
+        buckets[first_deleted].key = key;
+        buckets[first_deleted].val = val;
+        buckets[first_deleted].status = Status::Occupied;
+        return true;
       }
     }
     return true;
